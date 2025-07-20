@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SuddenSparkEvents Frontend
 
-## Getting Started
+This is the frontend for **Sudden Spark Events**, a community-driven platform for submitting and discovering local events.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✅ Core Pages
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Page             | Route            | Purpose                                                     |
+| ---------------- | ---------------- | ----------------------------------------------------------- |
+| **Home**         | `/`              | Intro, featured events, CTAs                                |
+| **Submit Event** | `/submit`        | Public form to submit an event (pending approval)           |
+| **Events List**  | `/events`        | All approved events shown as cards                          |
+| **Event Detail** | `/events/[slug]` | Full detail page for an individual event                    |
+| **Admin Panel**  | `/admin`         | Approve or reject submitted events (basic, no auth for now) |
+| **About Us**     | `/about`         | Project background, mission, vision                         |
+| **Contact**      | `/contact`       | Basic contact form (optional map/address section)           |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧩 Component Architecture & Rules
 
-## Learn More
+- All **shared components** must be placed in:
 
-To learn more about Next.js, take a look at the following resources:
+  - `src/components/[category]/ComponentName.tsx`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- If a component is used across multiple pages, place it in:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+  - `src/components/ui/` or appropriate subfolder (`layout/`, `events/`, etc.)
 
-## Deploy on Vercel
+- Every component file must use **named export syntax**:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+  ```tsx
+  export const ComponentName = () => {
+    return <div>...</div>;
+  };
+  ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 📦 Import Rules
+
+1. **Component is first imported into its local index.ts inside its folder:**
+
+   ```ts
+   // src/components/ui/index.ts
+   export * from "./Button";
+   ```
+
+2. **Then it's re-exported from the main components/index.ts:**
+
+   ```ts
+   // src/components/index.ts
+   export * from "./ui";
+   export * from "./layout";
+   export * from "./events";
+   ```
+
+3. **Finally, import and use it anywhere:**
+
+   ```tsx
+   import { Button } from "@/components";
+   ```
+
+   Follow the same structure used in the Hero and Home components.
+
+- Keep code minimal and consistent.
+- Use DaisyUI utility classes like:
+  - `btn`
+  - `btn-primary`
+  - `btn-outline`
+- Avoid custom `bg-`, `text-`, or `hover:` classes unless necessary.
