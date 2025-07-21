@@ -37,8 +37,8 @@ export const Button = ({
       ? "border border-blue-600 text-blue-600 bg-transparent hover:bg-blue-600 hover:text-white"
       : "bg-blue-600 text-white border border-blue-600 hover:bg-blue-700",
     gold: outline
-      ? "border border-white text-white bg-transparent hover:bg-[#ffd700] hover:text-black"
-      : "bg-[#ffd700] text-black border border-[#ffd700] hover:bg-yellow-400",
+      ? "border border-[#ffd700] text-[#ffd700] bg-transparent hover:bg-[#ffd700] hover:text-white"
+      : "bg-[#ffd700] text-white border border-[#ffd700] hover:bg-yellow-400",
   };
 
   const shape = rounded ? "rounded-full" : "rounded-md";
