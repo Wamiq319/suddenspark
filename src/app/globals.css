@@ -1,2 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+.gold {
+  color: #ffd700 !important;
+}
