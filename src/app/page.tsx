@@ -1,10 +1,19 @@
-import { Hero, Testimonial } from "@/components";
+import {
+  Hero,
+  RecentEventsSection,
+  EventFlowSection,
+  CallToAction,
+  Testimonials,
+} from "@/components";
 
 export default function Home() {
   return (
     <main>
       <Hero />
-      <Testimonial />
+      <RecentEventsSection />
+      <EventFlowSection />
+      <CallToAction />
+      <Testimonials />
     </main>
   );
 }
