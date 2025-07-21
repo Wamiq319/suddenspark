@@ -22,8 +22,13 @@ export const Hero = () => {
         </h1>
 
         <p className="text-lg opacity-90">
-          Spark connections, celebrate creativity, and empower communities with
-          unforgettable events that bring people together.
+          Host events that inspire. From local meetups to large-scale
+          experiences, we help you launch, grow, and engage your community with
+          ease.
+        </p>
+        <p className="text-lg opacity-90">
+          Discover events that match your passions and connect with like-minded
+          people. Find your next great experience — or create it.
         </p>
 
         <div className="mt-6 flex flex-col sm:flex-row gap-4 w-full">
