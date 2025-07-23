@@ -6,12 +6,13 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { HiMenu, HiX } from "react-icons/hi";
+import { ROUTES } from "@/lib";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Home" },
-  { href: "/events", label: "Events" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: ROUTES.home, label: "Home" },
+  { href: ROUTES.events, label: "Events" },
+  { href: ROUTES.about, label: "About" },
+  { href: ROUTES.contact, label: "Contact" },
 ];
 
 export function Navbar() {
@@ -25,7 +26,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm border-b border-base-200">
       <nav className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 min-w-0">
+        <Link href={ROUTES.home} className="flex items-center gap-2 min-w-0">
           <span className="inline-flex items-center justify-center rounded-full bg-white/80 shadow-md w-9 h-9 shrink-0">
             <Image
               src="/Logo.png"
@@ -59,7 +60,7 @@ export function Navbar() {
 
         {/* Desktop Button */}
         <div className="hidden md:block">
-          <Link href="/submit">
+          <Link href={ROUTES.eventSubmit}>
             <Button color="gold" outline rounded>
               List an Event
             </Button>
@@ -93,7 +94,7 @@ export function Navbar() {
             ))}
           </ul>
 
-          <Link href="/submit" className="block mt-4">
+          <Link href={ROUTES.eventSubmit} className="block mt-4">
             <Button color="gold" outline rounded className="w-full">
               List an Event
             </Button>

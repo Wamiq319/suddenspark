@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { ROUTES } from "@/lib";
 
 export const Hero = () => {
   return (
@@ -30,12 +31,12 @@ export const Hero = () => {
         </p>
 
         <div className="mt-6 flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center sm:items-start justify-center sm:justify-start">
-          <Link href="/events">
+          <Link href={ROUTES.events}>
             <Button color="gold" rounded className="w-full sm:w-auto">
               Explore Events
             </Button>
           </Link>
-          <Link href="/submit">
+          <Link href={ROUTES.eventSubmit}>
             <Button color="white" outline rounded className="w-full sm:w-auto">
               List an Event
             </Button>

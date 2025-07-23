@@ -5,7 +5,6 @@ import React, { InputHTMLAttributes } from "react";
 interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   color?: "white" | "blue" | "gold";
   outline?: boolean;
-  className?: string;
 }
 
 export function InputField({
