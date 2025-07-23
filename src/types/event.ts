@@ -15,6 +15,7 @@ export interface Event {
   title: string;
   description: string;
   location: string;
+  event: string;
   email: string;
   date: string; // ISO format preferred e.g. "2025-07-30"
   time: string; // e.g. "14:00"
