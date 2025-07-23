@@ -14,8 +14,7 @@ export const Hero = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Content */}
-      <div className="relative z-10 max-w-3xl flex flex-col gap-6 text-left text-white items-center sm:items-start sm:text-center  w-full">
+      <div className="relative z-10 max-w-3xl flex flex-col gap-6 text-center sm:text-left text-white items-center sm:items-start w-full mx-auto px-6">
         <h1 className="text-4xl md:text-5xl font-bold gold">
           Ignite Your Community
         </h1>
@@ -30,7 +29,7 @@ export const Hero = () => {
           people. Find your next great experience — or create it.
         </p>
 
-        <div className="mt-6 flex flex-col sm:flex-row gap-4 w-full items-center sm:items-start justify-center sm:justify-start">
+        <div className="mt-6 flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center sm:items-start justify-center sm:justify-start">
           <Link href="/events">
             <Button color="gold" rounded className="w-full sm:w-auto">
               Explore Events
