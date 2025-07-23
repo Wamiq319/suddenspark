@@ -32,17 +32,18 @@ export const Navbar = () => {
                 href="/events"
                 className="text-black text-sm transition-colors duration-200 hover:gold"
               >
-                Events
+                Home
               </Link>
             </li>
             <li>
               <Link
-                href="/submit"
+                href="/events"
                 className="text-black text-sm transition-colors duration-200 hover:gold"
               >
-                Submit
+                Events
               </Link>
             </li>
+
             <li className="hidden sm:inline-block">
               <Link
                 href="/about"
@@ -69,7 +70,7 @@ export const Navbar = () => {
             className="ml-0 sm:ml-4"
             type="button"
           >
-            List Event
+            List an Event
           </Button>
         </div>
       </div>
