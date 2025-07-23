@@ -8,22 +8,31 @@ export function TimePickerField({
   value,
   onChange,
   placeholder = "Select time",
+  label,
 }: {
   value: Date | null;
   onChange: (date: Date | null) => void;
   placeholder?: string;
+  label?: string;
 }) {
   return (
-    <DatePicker
-      selected={value}
-      onChange={onChange}
-      showTimeSelect
-      showTimeSelectOnly
-      timeIntervals={15}
-      timeCaption="Time"
-      dateFormat="h:mm aa"
-      placeholderText={placeholder}
-      className="input border border-blue-600 text-blue-600 bg-transparent rounded-full px-6 py-3 w-full max-w-md placeholder-blue-600 focus:outline-none"
-    />
+    <div className="w-full max-w-md">
+      {label && (
+        <label className="block mb-1 text-sm font-medium text-base-content/70">
+          {label}
+        </label>
+      )}
+      <DatePicker
+        selected={value}
+        onChange={onChange}
+        showTimeSelect
+        showTimeSelectOnly
+        timeIntervals={15}
+        timeCaption="Time"
+        dateFormat="h:mm aa"
+        placeholderText={placeholder}
+        className="input border border-[#ffd700] text-[#ffd700] bg-transparent rounded-full px-6 py-3 w-full max-w-md placeholder-[#ffd700] focus:outline-none"
+      />
+    </div>
   );
 }

@@ -5,6 +5,7 @@ import React, { InputHTMLAttributes } from "react";
 interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   color?: "white" | "blue" | "gold";
   outline?: boolean;
+  label?: string;
 }
 
 export function InputField({
@@ -12,6 +13,7 @@ export function InputField({
   outline = false,
   className = "",
   type = "text",
+  label,
   ...props
 }: InputFieldProps) {
   const base =
@@ -33,5 +35,14 @@ export function InputField({
     " "
   );
 
-  return <input type={type} className={classes.trim()} {...props} />;
+  return (
+    <div className="w-full max-w-md">
+      {label && (
+        <label className="block mb-1 text-sm font-medium text-base-content/70">
+          {label}
+        </label>
+      )}
+      <input type={type} className={classes.trim()} {...props} />
+    </div>
+  );
 }
