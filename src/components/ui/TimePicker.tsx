@@ -9,16 +9,27 @@ export function TimePickerField({
   onChange,
   placeholder = "Select time",
   label,
+  color = "white",
 }: {
   value: Date | null;
   onChange: (date: Date | null) => void;
   placeholder?: string;
   label?: string;
+  color?: "white" | "blue" | "gold";
 }) {
   return (
     <div className="w-full max-w-md">
       {label && (
-        <label className="block mb-1 text-sm font-medium text-base-content/70">
+        <label
+          className={[
+            "block mb-1 text-sm font-medium",
+            color === "gold"
+              ? "text-[#ffd700]"
+              : color === "blue"
+              ? "text-blue-600"
+              : "text-white",
+          ].join(" ")}
+        >
           {label}
         </label>
       )}
