@@ -16,7 +16,6 @@ interface EventCardProps {
 }
 
 export const EventCard = ({
-  id,
   title,
   description,
   date,
