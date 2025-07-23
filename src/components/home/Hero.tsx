@@ -15,10 +15,7 @@ export const Hero = () => {
       }}
     >
       {/* Content */}
-      <div
-        className="relative z-10 max-w-3xl flex flex-col items-start gap-6 text-left text-white
-        sm:items-start sm:text-left items-center text-center w-full"
-      >
+      <div className="relative z-10 max-w-3xl flex flex-col gap-6 text-left text-white items-center sm:items-start sm:text-center  w-full">
         <h1 className="text-4xl md:text-5xl font-bold gold">
           Ignite Your Community
         </h1>
