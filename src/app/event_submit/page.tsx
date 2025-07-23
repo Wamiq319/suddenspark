@@ -9,7 +9,7 @@ import {
   TimePickerField,
   DropdownField,
   ImageUploadField,
-} from "@/components/ui";
+} from "@/components";
 
 const CATEGORY_OPTIONS = [
   { value: "Community", label: "Community" },

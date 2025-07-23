@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { InputField } from "@/components/ui/InputField";
+import { InputField } from "@/components/input/InputField";
 
 export function NewsletterSection() {
   return (
