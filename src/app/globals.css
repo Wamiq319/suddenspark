@@ -1,6 +1,24 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+/* Primary accent color */
 .gold {
   color: #ffd700 !important;
+}
+
+/* Primary accent background */
+.gold-bg {
+  background-color: #ffd700 !important;
+  color: white !important;
+}
+
+/* Blue text (e.g., links or titles) */
+.blue {
+  color: #1e40af !important; /* Tailwind blue-800 */
+}
+
+/* Blue background section */
+.blue-bg {
+  background-color: #1e40af !important;
+  color: white !important;
 }

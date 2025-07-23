@@ -2,8 +2,8 @@ import {
   Hero,
   RecentEventsSection,
   EventFlowSection,
-  CallToAction,
-  Testimonials,
+  AboutSection,
+  NewsletterSection,
 } from "@/components";
 
 export default function Home() {
@@ -12,8 +12,8 @@ export default function Home() {
       <Hero />
       <RecentEventsSection />
       <EventFlowSection />
-      <CallToAction />
-      <Testimonials />
+      <AboutSection />
+      <NewsletterSection />
     </main>
   );
 }
