@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 export const Hero = () => {
   return (
     <section
-      className="relative px-6 py-20 overflow-hidden min-h-screen flex items-center bg-base-100"
+      className="relative w-full py-20 overflow-x-hidden min-h-screen flex items-center bg-base-100"
       style={{
         backgroundImage: "url('/home/hero-bg.jpeg')",
         backgroundSize: "cover",
@@ -15,7 +15,10 @@ export const Hero = () => {
       }}
     >
       {/* Content */}
-      <div className="relative z-10 max-w-3xl flex flex-col items-start gap-6 text-left text-white">
+      <div
+        className="relative z-10 max-w-3xl flex flex-col items-start gap-6 text-left text-white
+        sm:items-start sm:text-left items-center text-center w-full"
+      >
         <h1 className="text-4xl md:text-5xl font-bold gold">
           Ignite Your Community
         </h1>
@@ -30,7 +33,7 @@ export const Hero = () => {
           people. Find your next great experience — or create it.
         </p>
 
-        <div className="mt-6 flex flex-col sm:flex-row gap-4 w-full">
+        <div className="mt-6 flex flex-col sm:flex-row gap-4 w-full items-center sm:items-start justify-center sm:justify-start">
           <Link href="/events">
             <Button color="gold" rounded className="w-full sm:w-auto">
               Explore Events
