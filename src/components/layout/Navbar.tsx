@@ -2,13 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/Button";
-import { HiMenu, HiX } from "react-icons/hi";
+import { HiMenu } from "react-icons/hi";
 
 export function Navbar() {
-  const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
   const navLink = (href: string, label: string) => (
@@ -18,7 +16,6 @@ export function Navbar() {
         className={`text-sm transition-colors duration-200 hover:gold ${
           pathname === href ? "gold font-semibold" : "text-black"
         }`}
-        onClick={() => setOpen(false)}
       >
         {label}
       </Link>
@@ -26,75 +23,74 @@ export function Navbar() {
   );
 
   return (
-    <nav className="navbar bg-white border-b border-base-200 shadow-md fixed top-0 left-0 w-full z-50">
-      <div className="w-full mx-auto px-4 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group min-w-0">
-          <span className="inline-flex items-center justify-center rounded-full bg-white/80 shadow-md w-9 h-9 shrink-0">
-            <Image
-              src="/Logo.png"
-              alt="SuddenSpark Logo"
-              width={28}
-              height={28}
-              className="rounded-full object-cover"
-              priority
-            />
-          </span>
-          <span className="font-bold transition-colors duration-200 gold group-hover:gold text-lg sm:text-xl md:text-2xl truncate">
-            SuddenSparkEvents
-          </span>
-        </Link>
+    <div className="drawer z-50">
+      <input id="nav-drawer" type="checkbox" className="drawer-toggle" />
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex">
-          <ul className="menu menu-horizontal px-1 gap-3">
+      {/* Navbar */}
+      <div className="drawer-content">
+        <nav className="navbar bg-white border-b border-base-200 shadow-md fixed top-0 left-0 w-full z-50">
+          <div className="w-full px-4 flex items-center justify-between">
+            {/* Left: Logo + text */}
+            <Link href="/" className="flex items-center gap-2 min-w-0">
+              <span className="inline-flex items-center justify-center rounded-full bg-white/80 shadow-md w-9 h-9 shrink-0">
+                <Image
+                  src="/Logo.png"
+                  alt="SuddenSpark Logo"
+                  width={28}
+                  height={28}
+                  className="rounded-full object-cover"
+                  priority
+                />
+              </span>
+              <span className="text-lg sm:text-xl font-bold gold truncate">
+                SuddenSpark
+              </span>
+            </Link>
+
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center gap-4">
+              <ul className="menu menu-horizontal px-1 gap-3">
+                {navLink("/", "Home")}
+                {navLink("/events", "Events")}
+                {navLink("/about", "About")}
+                {navLink("/contact", "Contact")}
+              </ul>
+              <Link href="/submit">
+                <Button color="gold" outline rounded>
+                  List an Event
+                </Button>
+              </Link>
+            </div>
+
+            {/* Mobile hamburger */}
+            <label
+              htmlFor="nav-drawer"
+              className="btn btn-ghost btn-sm md:hidden"
+            >
+              <HiMenu className="w-6 h-6" />
+            </label>
+          </div>
+        </nav>
+      </div>
+
+      {/* Drawer content for mobile */}
+      <div className="drawer-side md:hidden z-50">
+        <label htmlFor="nav-drawer" className="drawer-overlay"></label>
+        <div className="menu p-4 w-72 min-h-full bg-white text-base-content flex flex-col justify-between">
+          <ul className="space-y-1">
             {navLink("/", "Home")}
             {navLink("/events", "Events")}
             {navLink("/about", "About")}
             {navLink("/contact", "Contact")}
           </ul>
-        </div>
 
-        {/* CTA + Hamburger */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <Link href="/submit" className="hidden sm:inline-block">
-            <Button color="gold" outline rounded type="button">
+          <Link href="/submit" className="mt-6">
+            <Button color="gold" outline rounded className="w-full">
               List an Event
             </Button>
           </Link>
-          <button
-            className="md:hidden btn btn-ghost btn-sm"
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle Menu"
-          >
-            {open ? (
-              <HiX className="w-6 h-6" />
-            ) : (
-              <HiMenu className="w-6 h-6" />
-            )}
-          </button>
         </div>
       </div>
-
-      {/* Mobile menu */}
-      {open && (
-        <div className="md:hidden bg-white border-t border-base-200">
-          <ul className="menu px-4 py-2 space-y-1">
-            {navLink("/", "Home")}
-            {navLink("/events", "Events")}
-            {navLink("/about", "About")}
-            {navLink("/contact", "Contact")}
-            <li>
-              <Link
-                href="/submit"
-                className="btn btn-sm btn-outline border-[#ffd700] text-[#ffd700] w-full mt-2"
-              >
-                List an Event
-              </Link>
-            </li>
-          </ul>
-        </div>
-      )}
-    </nav>
+    </div>
   );
 }
