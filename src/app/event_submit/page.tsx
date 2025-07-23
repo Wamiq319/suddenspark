@@ -124,18 +124,18 @@ export default function EventSubmitPage() {
           label="Category"
         />
 
-        <div className="w-full max-w-md">
-          <label className="block mb-1 text-sm font-medium text-base-content/70">
-            Event Description
-          </label>
-          <textarea
-            name="description"
-            placeholder="Event Description"
-            className="textarea w-full h-32 p-4 border border-base-300 rounded-lg"
-            value={formData.description}
-            onChange={handleChange}
-          />
-        </div>
+        <InputField
+          name="description"
+          placeholder="Event Description"
+          value={formData.description}
+          onChange={handleChange}
+          color="gold"
+          outline
+          label="Event Description"
+          textarea
+          rows={6}
+          textareaHeight="120px"
+        />
 
         <div className="pt-4">
           <Button color="gold" type="submit" rounded className="w-full">

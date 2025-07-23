@@ -1,21 +1,32 @@
 "use client";
 
-import React, { InputHTMLAttributes } from "react";
+import React, { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 
-interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
-  color?: "white" | "blue" | "gold";
-  outline?: boolean;
-  label?: string;
-}
+type InputFieldProps =
+  | ({
+      textarea?: false;
+      color?: "white" | "blue" | "gold";
+      outline?: boolean;
+      label?: string;
+    } & React.InputHTMLAttributes<HTMLInputElement>)
+  | ({
+      textarea: true;
+      color?: "white" | "blue" | "gold";
+      outline?: boolean;
+      label?: string;
+      rows?: number;
+      textareaHeight?: string;
+    } & React.TextareaHTMLAttributes<HTMLTextAreaElement>);
 
-export function InputField({
-  color = "white",
-  outline = false,
-  className = "",
-  type = "text",
-  label,
-  ...props
-}: InputFieldProps) {
+export function InputField(props: InputFieldProps) {
+  const {
+    color = "white",
+    outline = false,
+    className = "",
+    label,
+    ...rest
+  } = props;
+
   const base =
     "input px-6 py-3 w-full max-w-md font-medium transition duration-200";
 
@@ -31,9 +42,7 @@ export function InputField({
       : "bg-[#ffd700] text-white border border-[#ffd700]",
   };
 
-  const classes = [base, colorClasses[color], "rounded-full", className].join(
-    " "
-  );
+  const isTextarea = "textarea" in props && props.textarea;
 
   return (
     <div className="w-full max-w-md">
@@ -42,7 +51,34 @@ export function InputField({
           {label}
         </label>
       )}
-      <input type={type} className={classes.trim()} {...props} />
+      {isTextarea ? (
+        <textarea
+          className={[
+            "textarea w-full max-w-md font-medium transition duration-200 rounded-lg",
+            outline
+              ? colorClasses[color]
+              : color === "gold"
+              ? "bg-[#ffd700] text-white border border-[#ffd700]"
+              : colorClasses[color],
+            className,
+          ]
+            .join(" ")
+            .trim()}
+          rows={props.rows ?? 4}
+          style={
+            props.textareaHeight ? { height: props.textareaHeight } : undefined
+          }
+          {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+        />
+      ) : (
+        <input
+          type={"type" in props && props.type ? props.type : "text"}
+          className={[base, colorClasses[color], "rounded-full", className]
+            .join(" ")
+            .trim()}
+          {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
+        />
+      )}
     </div>
   );
 }
