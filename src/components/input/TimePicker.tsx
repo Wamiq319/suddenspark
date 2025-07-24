@@ -3,36 +3,22 @@
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { FaRegClock } from "react-icons/fa";
 
 export function TimePickerField({
   value,
   onChange,
   placeholder = "Select time",
-  label,
   color = "white",
 }: {
   value: Date | null;
   onChange: (date: Date | null) => void;
   placeholder?: string;
-  label?: string;
   color?: "white" | "blue" | "gold";
 }) {
   return (
-    <div className="w-full max-w-md">
-      {label && (
-        <label
-          className={[
-            "block mb-1 text-sm font-medium",
-            color === "gold"
-              ? "text-[#ffd700]"
-              : color === "blue"
-              ? "text-blue-600"
-              : "text-white",
-          ].join(" ")}
-        >
-          {label}
-        </label>
-      )}
+    <div className="w-full max-w-md relative">
+      <FaRegClock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#ffd700] text-lg pointer-events-none z-10" />
       <DatePicker
         selected={value}
         onChange={onChange}
@@ -42,7 +28,7 @@ export function TimePickerField({
         timeCaption="Time"
         dateFormat="h:mm aa"
         placeholderText={placeholder}
-        className="input border border-[#ffd700] text-[#ffd700] bg-transparent rounded-full px-6 py-3 w-full max-w-md placeholder-[#ffd700] focus:outline-none"
+        className="input border border-[#ffd700] text-[#ffd700] bg-transparent rounded-full pl-10 pr-6 py-3 w-full max-w-md placeholder-[#ffd700] focus:outline-none"
       />
     </div>
   );

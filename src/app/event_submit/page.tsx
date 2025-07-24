@@ -10,6 +10,7 @@ import {
   ImageUploadField,
 } from "@/components";
 import type { Event } from "@/types";
+import { FaPlusCircle, FaCheckCircle, FaCalendarAlt } from "react-icons/fa";
 
 const CATEGORY_OPTIONS = [
   { value: "Community", label: "Community" },
@@ -29,7 +30,6 @@ type EventFormData = Omit<
 > & {
   date: Date | null;
   time: Date | null;
-  image?: File | null;
 };
 
 export default function EventSubmitPage() {
@@ -69,15 +69,12 @@ export default function EventSubmitPage() {
         ? customCategory
         : formData.category;
 
-    const formattedDate = formData.date
-      ? formData.date.toISOString().split("T")[0]
-      : "";
-    const formattedTime = formData.time
-      ? formData.time.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      : "";
+    const formattedDate = formData.date?.toISOString().split("T")[0] || "";
+    const formattedTime =
+      formData.time?.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }) || "";
 
     const body = new FormData();
     body.append("title", formData.title);
@@ -89,127 +86,227 @@ export default function EventSubmitPage() {
     body.append("time", formattedTime);
     if (imageFile) body.append("image", imageFile);
 
-    const res = await fetch("/api/event", {
-      method: "POST",
-      body,
-    });
+    try {
+      const res = await fetch("/api/event", {
+        method: "POST",
+        body,
+      });
 
-    const result = await res.json();
-    console.log(result);
-
-    setSubmitting(false);
+      const result = await res.json();
+      console.log("Event created:", result);
+    } catch (err) {
+      console.error("Event submit error:", err);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+    <section className="max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
       {/* Left CTA Section */}
-      <div className="space-y-6 text-center md:text-left">
-        <h1 className="text-4xl md:text-5xl font-bold gold">
-          Share Your Spark
-        </h1>
-        <p className="text-lg text-base-content/80 max-w-md mx-auto md:mx-0">
-          Hosting a community gathering, meetup, or creative experience? Submit
-          your event and let your city know.
-        </p>
-        <p className="text-base text-base-content/70 max-w-md mx-auto md:mx-0">
-          Every event goes through a quick review to ensure alignment with our
-          values. Let’s build a stronger, more connected community — one event
-          at a time.
-        </p>
+
+      <div className="space-y-6">
+        {/* CTA Card */}
+        <div className="bg-blue-600 text-white rounded-xl p-8 shadow-lg space-y-5 text-center md:text-left">
+          <h2 className="text-3xl md:text-4xl font-bold leading-tight">
+            Submit. Review. Go Live.
+          </h2>
+          <p className="text-white/90">
+            Events are manually reviewed for quality and community fit. Once
+            approved, your event will appear on the calendar for all to see.
+          </p>
+
+          <div className="space-y-4 mt-6">
+            <div className="flex items-start gap-3">
+              <FaPlusCircle className="text-white text-xl mt-1" />
+              <div>
+                <p className="font-semibold">Quick Submission</p>
+                <p className="text-white/80 text-sm">
+                  Fill in the short form with your event details.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <FaCheckCircle className="text-white text-xl mt-1" />
+              <div>
+                <p className="font-semibold">Manual Review</p>
+                <p className="text-white/80 text-sm">
+                  Admins verify your event aligns with our guidelines.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <FaCalendarAlt className="text-white text-xl mt-1" />
+              <div>
+                <p className="font-semibold">Community Visibility</p>
+                <p className="text-white/80 text-sm">
+                  Approved events are added to our Site.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Info Card */}
+        <div className="bg-blue-700 text-white/90 rounded-xl p-6 shadow-md space-y-3 text-sm md:text-base text-center md:text-left">
+          <p className="leading-relaxed">
+            We’re building a space for real people doing real things —
+            neighborhood meetups, cultural popups, faith-based efforts, creative
+            workshops, fundraisers and more.
+          </p>
+          <p className="text-white/70 text-sm">
+            All listings go through human review. Need help?{" "}
+            <a href="/contact" className="underline hover:text-white">
+              Reach out to our team
+            </a>
+            .
+          </p>
+        </div>
       </div>
 
       {/* Event Form */}
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 bg-base-100 p-6 rounded-box border border-base-300 shadow-md"
+        className="space-y-6 bg-base-100 p-6 rounded-box border border-base-300 shadow-sm"
       >
-        <ImageUploadField onChange={setImageFile} label="Event Image" />
+        {/* Row: Title + Email */}
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="w-full">
+            <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
+              Event Title
+            </span>
+            <InputField
+              name="title"
+              placeholder="Event Title"
+              value={formData.title}
+              onChange={handleChange}
+              color="gold"
+              outline
+              type="text"
+            />
+          </div>
+          <div className="w-full">
+            <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
+              Contact Email
+            </span>
+            <InputField
+              name="email"
+              placeholder="Your Email"
+              value={formData.email}
+              onChange={handleChange}
+              color="gold"
+              outline
+              type="email"
+            />
+          </div>
+        </div>
 
-        <InputField
-          name="title"
-          placeholder="Event Title"
-          value={formData.title}
-          onChange={handleChange}
-          color="gold"
-          outline
-          label="Event Title"
-        />
+        {/* Row: Image Upload */}
+        <div>
+          <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
+            Event Image
+          </span>
+          <ImageUploadField onChange={setImageFile} />
+        </div>
 
-        <InputField
-          name="email"
-          placeholder="Your Email"
-          value={formData.email}
-          onChange={handleChange}
-          color="gold"
-          outline
-          label="Contact Email"
-        />
-
-        <DatePickerField
-          value={formData.date}
-          onChange={(value) =>
-            setFormData((prev) => ({ ...prev, date: value }))
-          }
-          label="Event Date"
-          color="gold"
-          placeholder="Choose the event date"
-        />
-
-        <TimePickerField
-          value={formData.time}
-          onChange={(value) =>
-            setFormData((prev) => ({ ...prev, time: value }))
-          }
-          label="Event Time"
-          color="gold"
-          placeholder="Choose the event start time"
-        />
-
-        <InputField
-          name="location"
-          placeholder="Location"
-          value={formData.location}
-          onChange={handleChange}
-          color="gold"
-          outline
-          label="Location"
-        />
-
-        <DropdownField
-          name="category"
-          options={CATEGORY_OPTIONS}
-          value={formData.category}
-          onChange={handleCategoryChange}
-          color="gold"
-          outline
-          label="Category"
-        />
-
-        {formData.category === "Other" && (
+        {/* Row: Location */}
+        <div>
+          <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
+            Location
+          </span>
           <InputField
-            name="customCategory"
-            placeholder="Enter custom category"
-            value={customCategory}
-            onChange={(e) => setCustomCategory(e.target.value)}
+            name="location"
+            placeholder="Location"
+            value={formData.location}
+            onChange={handleChange}
             color="gold"
             outline
-            label="Custom Category"
+            type="text"
           />
+        </div>
+
+        {/* Row: Date + Time */}
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="w-full">
+            <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
+              Event Date
+            </span>
+            <DatePickerField
+              value={formData.date}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, date: value }))
+              }
+              color="gold"
+              placeholder="Choose the event date"
+            />
+          </div>
+          <div className="w-full">
+            <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
+              Event Time
+            </span>
+            <TimePickerField
+              value={formData.time}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, time: value }))
+              }
+              color="gold"
+              placeholder="Choose the event start time"
+            />
+          </div>
+        </div>
+
+        {/* Row: Category + Optional Custom */}
+        <div>
+          <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
+            Category
+          </span>
+          <DropdownField
+            name="category"
+            options={CATEGORY_OPTIONS}
+            value={formData.category}
+            onChange={handleCategoryChange}
+            color="gold"
+            outline
+          />
+        </div>
+
+        {formData.category === "Other" && (
+          <div>
+            <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
+              Custom Category
+            </span>
+            <InputField
+              name="customCategory"
+              placeholder="Enter custom category"
+              value={customCategory}
+              onChange={(e) => setCustomCategory(e.target.value)}
+              color="gold"
+              outline
+            />
+          </div>
         )}
 
-        <InputField
-          name="description"
-          placeholder="Event Description"
-          value={formData.description}
-          onChange={handleChange}
-          color="gold"
-          outline
-          label="Event Description"
-          textarea
-          rows={6}
-          textareaHeight="120px"
-        />
+        {/* Row: Description */}
+        <div>
+          <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
+            Event Description
+          </span>
+          <InputField
+            name="description"
+            placeholder="Event Description"
+            value={formData.description}
+            onChange={handleChange}
+            color="gold"
+            outline
+            textarea
+            rows={6}
+            textareaHeight="120px"
+          />
+        </div>
 
+        {/* Submit Button */}
         <div className="pt-4">
           <Button
             color="gold"

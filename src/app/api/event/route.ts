@@ -1,17 +1,14 @@
-// app/api/event/route.ts
-
 import { NextResponse } from "next/server";
 import { dbConnect, EventModel } from "@/lib/server";
-import type { Event } from "@/types";
+import { uploadToCloudinary } from "@/lib/utils/uploadToCloudinary";
 
 export async function POST(request: Request) {
   try {
     await dbConnect();
 
-    const data = (await request.json()) as Partial<Event>;
+    const formData = await request.formData();
 
-    // Required fields based on your type
-    const requiredFields: (keyof Event)[] = [
+    const requiredFields = [
       "title",
       "description",
       "location",
@@ -19,21 +16,38 @@ export async function POST(request: Request) {
       "time",
       "category",
       "email",
-      "image",
-    ];
+    ] as const;
 
+    const data: Record<string, string> = {};
     for (const field of requiredFields) {
-      if (!data[field]) {
+      const value = formData.get(field);
+      if (!value || typeof value !== "string") {
         return NextResponse.json(
-          { success: false, message: `Missing field: ${field}` },
+          { success: false, message: `Missing or invalid field: ${field}` },
           { status: 400 }
         );
       }
+      data[field] = value;
+    }
+
+    let imageUrl = "";
+    let imageId = "";
+
+    const imageFile = formData.get("image") as File | null;
+
+    if (imageFile) {
+      const arrayBuffer = await imageFile.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const uploadResult = await uploadToCloudinary(buffer, imageFile.type);
+      imageUrl = uploadResult.url;
+      imageId = uploadResult.public_id;
     }
 
     const createdEvent = await EventModel.create({
       ...data,
-      approved: false, // Admin approval pending
+      image: imageUrl,
+      imageId,
+      approved: false,
     });
 
     return NextResponse.json({ success: true, event: createdEvent });

@@ -1,83 +1,84 @@
 "use client";
 
-import React, { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
+import React from "react";
+import {
+  MdEmail,
+  MdNumbers,
+  MdLock,
+  MdLocationOn,
+  MdTitle,
+} from "react-icons/md";
 
 type InputFieldProps =
-  | ({
+  | (React.InputHTMLAttributes<HTMLInputElement> & {
       textarea?: false;
       color?: "white" | "blue" | "gold";
       outline?: boolean;
-      label?: string;
-    } & React.InputHTMLAttributes<HTMLInputElement>)
-  | ({
+    })
+  | (React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
       textarea: true;
       color?: "white" | "blue" | "gold";
       outline?: boolean;
-      label?: string;
       rows?: number;
       textareaHeight?: string;
-    } & React.TextareaHTMLAttributes<HTMLTextAreaElement>);
+    });
+
+const ICON_MAP: Record<string, React.ElementType> = {
+  email: MdEmail,
+  number: MdNumbers,
+  password: MdLock,
+  location: MdLocationOn,
+  title: MdTitle,
+};
 
 export function InputField(props: InputFieldProps) {
-  const {
-    color = "white",
-    outline = false,
-    className = "",
-    label,
-    ...rest
-  } = props;
+  const { color = "white", outline = false, className = "", ...rest } = props;
+  const isTextarea = props.textarea;
 
-  const base =
-    "input px-6 py-3 w-full max-w-md font-medium transition duration-200";
-
-  const colorClasses = {
-    white: outline
-      ? "bg-transparent text-white border border-white placeholder-white"
-      : "bg-white text-black border border-white",
-    blue: outline
-      ? "bg-transparent text-blue-600 border border-blue-600 placeholder-blue-600"
-      : "bg-blue-600 text-white border border-blue-600",
-    gold: outline
-      ? "bg-transparent text-[#ffd700] border border-[#ffd700] placeholder-[#ffd700]"
-      : "bg-[#ffd700] text-white border border-[#ffd700]",
+  const focusRing = {
+    white: "focus:ring-white focus:border-white",
+    blue: "focus:ring-blue-600 focus:border-blue-600",
+    gold: "focus:ring-[#ffd700] focus:border-[#ffd700]",
   };
 
-  const isTextarea = "textarea" in props && props.textarea;
+  const iconColor = {
+    white: "text-neutral-500",
+    blue: "text-blue-600",
+    gold: "text-[#ffd700]",
+  };
+
+  const getIcon = () => {
+    if (isTextarea) return null;
+    const { type, name } = props as React.InputHTMLAttributes<HTMLInputElement>;
+    const iconKey = name === "location" || name === "title" ? name : type;
+    const Icon = ICON_MAP[iconKey || ""];
+
+    return Icon ? (
+      <Icon
+        className={`absolute left-4 top-1/2 -translate-y-1/2 text-lg pointer-events-none z-10 ${iconColor[color]}`}
+      />
+    ) : null;
+  };
+
+  const baseInputClass =
+    "w-full max-w-md transition duration-200 font-medium text-neutral-content border border-neutral-content bg-transparent focus:outline-none focus:ring-2";
+
+  const combinedClasses = [
+    baseInputClass,
+    focusRing[color],
+    isTextarea ? "textarea rounded-lg" : "input rounded-full",
+    getIcon() && !isTextarea ? "pl-10 pr-6" : "px-6 py-3",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <div className="w-full max-w-md">
-      {label && (
-        <label
-          className={[
-            "block mb-1 text-sm font-medium",
-            color === "gold"
-              ? "text-[#ffd700]"
-              : color === "blue"
-              ? "text-blue-600"
-              : "text-white",
-          ].join(" ")}
-        >
-          {label}
-        </label>
-      )}
+    <div className="w-full max-w-md relative">
+      {getIcon()}
       {isTextarea ? (
         <textarea
-          className={[
-            "textarea w-full max-w-md font-medium transition duration-200 rounded-lg focus:outline-none focus:ring-2",
-            outline
-              ? colorClasses[color]
-              : color === "gold"
-              ? "bg-[#ffd700] text-white border border-[#ffd700]"
-              : colorClasses[color],
-            color === "gold"
-              ? "focus:border-[#ffd700] focus:ring-[#ffd700]"
-              : color === "blue"
-              ? "focus:border-blue-600 focus:ring-blue-600"
-              : "focus:border-white focus:ring-white",
-            className,
-          ]
-            .join(" ")
-            .trim()}
+          className={combinedClasses}
           rows={props.rows ?? 4}
           style={
             props.textareaHeight ? { height: props.textareaHeight } : undefined
@@ -86,20 +87,11 @@ export function InputField(props: InputFieldProps) {
         />
       ) : (
         <input
-          type={"type" in props && props.type ? props.type : "text"}
-          className={[
-            base,
-            colorClasses[color],
-            "rounded-full focus:outline-none focus:ring-2",
-            color === "gold"
-              ? "focus:border-[#ffd700] focus:ring-[#ffd700]"
-              : color === "blue"
-              ? "focus:border-blue-600 focus:ring-blue-600"
-              : "focus:border-white focus:ring-white",
-            className,
-          ]
-            .join(" ")
-            .trim()}
+          type={
+            (props as React.InputHTMLAttributes<HTMLInputElement>).type ||
+            "text"
+          }
+          className={combinedClasses}
           {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
         />
       )}

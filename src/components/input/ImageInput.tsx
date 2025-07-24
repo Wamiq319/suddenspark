@@ -4,10 +4,9 @@ import { useRef, useState } from "react";
 
 interface ImageUploadFieldProps {
   onChange: (file: File | null) => void;
-  label?: string;
 }
 
-export function ImageUploadField({ onChange, label }: ImageUploadFieldProps) {
+export function ImageUploadField({ onChange }: ImageUploadFieldProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState<string>("");
   const [previewUrl, setPreviewUrl] = useState<string>("");
@@ -38,12 +37,6 @@ export function ImageUploadField({ onChange, label }: ImageUploadFieldProps) {
 
   return (
     <div className="w-full max-w-md">
-      {label && (
-        <label className="block mb-1 text-sm font-medium text-base-content/70 gold ">
-          {label}
-        </label>
-      )}
-
       <div
         className="mt-4 flex items-center gap-4 bg-base-200 border border-base-300 rounded-lg p-3 min-h-[96px] min-w-0"
         style={{ width: "100%", minWidth: "260px" }}

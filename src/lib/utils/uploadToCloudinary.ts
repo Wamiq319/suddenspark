@@ -1,12 +1,11 @@
 import cloudinary from "@/lib/cloudinary";
 
 export async function uploadToCloudinary(
-  file: File,
+  fileBuffer: Buffer,
+  mimetype: string,
   folder: string = "Events"
 ) {
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-  const base64 = `data:${file.type};base64,${buffer.toString("base64")}`;
+  const base64 = `data:${mimetype};base64,${fileBuffer.toString("base64")}`;
 
   const result = await cloudinary.uploader.upload(base64, {
     folder: `Sudden_Sparks_Events/${folder}`,

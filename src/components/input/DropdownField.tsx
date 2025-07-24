@@ -12,7 +12,6 @@ export type DropdownFieldProps = {
   options: DropdownOption[];
   color?: "white" | "blue" | "gold";
   outline?: boolean;
-  label?: string;
   className?: string;
 } & React.SelectHTMLAttributes<HTMLSelectElement>;
 
@@ -21,7 +20,6 @@ export function DropdownField(props: DropdownFieldProps) {
     options,
     color = "white",
     outline = false,
-    label,
     className = "",
     ...rest
   } = props;
@@ -43,20 +41,6 @@ export function DropdownField(props: DropdownFieldProps) {
 
   return (
     <div className="w-full max-w-md">
-      {label && (
-        <label
-          className={[
-            "block mb-1 text-sm font-medium",
-            color === "gold"
-              ? "text-[#ffd700]"
-              : color === "blue"
-              ? "text-blue-600"
-              : "text-white",
-          ].join(" ")}
-        >
-          {label}
-        </label>
-      )}
       <select
         className={[
           base,
