@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     const date = searchParams.get("date");
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const page = parseInt(searchParams.get("page") || "1", 10);
-    let query: any = {};
+    const query: Record<string, unknown> = {};
     if (date) {
       query.date = date;
     }

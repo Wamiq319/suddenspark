@@ -10,6 +10,8 @@ import { DatePickerField } from "@/components/input/DatePicker";
 
 const ITEMS_PER_PAGE = 10;
 
+type RawEvent = Omit<Event, "id"> & { _id: string };
+
 export default function AdminEventPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,7 +41,7 @@ export default function AdminEventPage() {
       const data = await res.json();
       if (res.ok && data.success) {
         // Map _id to id for frontend compatibility
-        const mappedEvents = data.events.map((event: any) => ({
+        const mappedEvents = data.events.map((event: RawEvent) => ({
           ...event,
           id: event._id,
         }));

@@ -27,7 +27,14 @@ const CATEGORY_OPTIONS = [
 
 type EventFormData = Omit<
   Event,
-  "id" | "slug" | "createdAt" | "updatedAt" | "date" | "time" | "image"
+  | "id"
+  | "slug"
+  | "createdAt"
+  | "updatedAt"
+  | "date"
+  | "time"
+  | "image"
+  | "approved"
 > & {
   date: Date | null;
   time: Date | null;
@@ -327,7 +334,6 @@ export default function EventSubmitPage() {
               onChange={(value) =>
                 setFormData((prev) => ({ ...prev, time: value }))
               }
-              color="gold"
               placeholder="Choose the event start time"
             />
             {errors.time && (
