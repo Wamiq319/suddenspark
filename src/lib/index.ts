@@ -1,2 +1,1 @@
-export * from "./route";
-export * from "./models";
+export * from "./utils/route";

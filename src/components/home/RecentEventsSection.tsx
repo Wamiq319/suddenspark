@@ -1,7 +1,6 @@
 "use client";
 
-import { EventCard } from "@/components/ui/EventCard";
-import { Button } from "@/components/ui/Button";
+import { EventCard, Button } from "@/components";
 
 const recentEvents = [
   {

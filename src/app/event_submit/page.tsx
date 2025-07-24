@@ -1,4 +1,3 @@
-// app/event_submit/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -10,6 +9,7 @@ import {
   DropdownField,
   ImageUploadField,
 } from "@/components";
+import type { Event } from "@/types";
 
 const CATEGORY_OPTIONS = [
   { value: "Community", label: "Community" },
@@ -23,13 +23,13 @@ const CATEGORY_OPTIONS = [
   { value: "Other", label: "Other" },
 ];
 
-type EventFormData = {
-  title: string;
-  description: string;
-  location: string;
-  category: string;
+type EventFormData = Omit<
+  Event,
+  "id" | "slug" | "createdAt" | "updatedAt" | "date" | "time" | "image"
+> & {
   date: Date | null;
   time: Date | null;
+  image?: File | null;
 };
 
 export default function EventSubmitPage() {
@@ -37,13 +37,15 @@ export default function EventSubmitPage() {
     title: "",
     description: "",
     location: "",
-    category: "",
+    email: "",
+    category: "Community",
     date: null,
     time: null,
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [customCategory, setCustomCategory] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -58,25 +60,44 @@ export default function EventSubmitPage() {
     if (value !== "Other") setCustomCategory("");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitting(true);
+
     const categoryToSubmit =
       formData.category === "Other" && customCategory
         ? customCategory
         : formData.category;
-    const submitData = {
-      ...formData,
-      category: categoryToSubmit,
-      date: formData.date ? formData.date.toISOString().split("T")[0] : "",
-      time: formData.time
-        ? formData.time.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-        : "",
-    };
-    // If you want to use the uploaded image, include imageFile here
-    console.log("Submitted Event:", submitData);
+
+    const formattedDate = formData.date
+      ? formData.date.toISOString().split("T")[0]
+      : "";
+    const formattedTime = formData.time
+      ? formData.time.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "";
+
+    const body = new FormData();
+    body.append("title", formData.title);
+    body.append("description", formData.description);
+    body.append("location", formData.location);
+    body.append("email", formData.email);
+    body.append("category", categoryToSubmit);
+    body.append("date", formattedDate);
+    body.append("time", formattedTime);
+    if (imageFile) body.append("image", imageFile);
+
+    const res = await fetch("/api/event", {
+      method: "POST",
+      body,
+    });
+
+    const result = await res.json();
+    console.log(result);
+
+    setSubmitting(false);
   };
 
   return (
@@ -114,6 +135,16 @@ export default function EventSubmitPage() {
           label="Event Title"
         />
 
+        <InputField
+          name="email"
+          placeholder="Your Email"
+          value={formData.email}
+          onChange={handleChange}
+          color="gold"
+          outline
+          label="Contact Email"
+        />
+
         <DatePickerField
           value={formData.date}
           onChange={(value) =>
@@ -121,7 +152,7 @@ export default function EventSubmitPage() {
           }
           label="Event Date"
           color="gold"
-          placeholder="Choose the event date (e.g. 2024-06-15)"
+          placeholder="Choose the event date"
         />
 
         <TimePickerField
@@ -131,7 +162,7 @@ export default function EventSubmitPage() {
           }
           label="Event Time"
           color="gold"
-          placeholder="Choose the event start time (e.g. 6:00 PM)"
+          placeholder="Choose the event start time"
         />
 
         <InputField
@@ -153,6 +184,7 @@ export default function EventSubmitPage() {
           outline
           label="Category"
         />
+
         {formData.category === "Other" && (
           <InputField
             name="customCategory"
@@ -179,8 +211,14 @@ export default function EventSubmitPage() {
         />
 
         <div className="pt-4">
-          <Button color="gold" type="submit" rounded className="w-full">
-            Submit Event
+          <Button
+            color="gold"
+            type="submit"
+            rounded
+            className="w-full"
+            disabled={submitting}
+          >
+            {submitting ? "Submitting..." : "Submit Event"}
           </Button>
         </div>
       </form>
