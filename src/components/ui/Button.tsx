@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 
 interface ButtonProps {
   children: ReactNode;
-  color?: "white" | "blue" | "gold";
+  color?: "white" | "blue" | "gold" | "red";
   outline?: boolean;
   className?: string;
   onClick?: () => void;
@@ -39,6 +39,9 @@ export const Button = ({
     gold: outline
       ? "border border-[#ffd700] text-[#ffd700] bg-transparent hover:bg-[#ffd700] hover:text-white"
       : "bg-[#ffd700] text-white border border-[#ffd700] hover:bg-yellow-400",
+    red: outline
+      ? "border border-red-600 text-red-600 bg-transparent hover:bg-red-600 hover:text-white"
+      : "bg-red-600 text-white border border-red-600 hover:bg-red-700",
   };
 
   const shape = rounded ? "rounded-full" : "rounded-md";
