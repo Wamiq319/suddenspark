@@ -161,9 +161,9 @@ export default function AdminEventPage() {
                     <Image
                       src={event.image}
                       alt={event.title}
-                      width={80}
-                      height={48}
-                      className="rounded object-cover w-20 h-12"
+                      width={56} // reduced from 80
+                      height={32} // reduced from 48
+                      className="rounded object-cover w-14 h-8 sm:w-20 sm:h-12" // responsive: smaller on mobile, original on sm+
                     />
                   ) : (
                     <div className="w-20 h-12 bg-base-300 rounded flex items-center justify-center text-xs text-gray-400">
@@ -233,8 +233,8 @@ export default function AdminEventPage() {
 
       {/* Event Detail Modal */}
       {modalOpen && selectedEvent && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-md p-0 w-full max-w-lg max-h-[80vh] overflow-hidden relative flex flex-col">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 mx-2">
+          <div className="bg-white rounded-md p-0 w-full max-w-3xl max-h-[80vh] sm:max-h-[90vh] overflow-hidden relative flex flex-col">
             {/* Fixed Header */}
             <div className="sticky top-0 z-10 bg-white flex items-center justify-between px-6 py-4 border-b border-gray-200">
               <h2 className="text-2xl font-bold">Event Details</h2>
@@ -246,72 +246,77 @@ export default function AdminEventPage() {
                 ✕
               </button>
             </div>
-            {/* Event Image */}
-            {selectedEvent.image && (
-              <div className="w-full max-h-64 overflow-hidden flex-shrink-0">
-                <Image
-                  src={selectedEvent.image}
-                  alt="Event"
-                  width={600}
-                  height={256}
-                  className="w-full object-cover max-h-64"
-                />
+            {/* Responsive Content: Image left, details right on PC */}
+            <div className="flex flex-col sm:flex-row items-start w-full h-full flex-1">
+              {/* Image */}
+              {selectedEvent.image && (
+                <div className="w-full sm:w-80 flex-shrink-0 flex items-center justify-center p-4">
+                  <Image
+                    src={selectedEvent.image}
+                    alt="Event"
+                    width={640}
+                    height={360}
+                    className="w-full aspect-video object-cover rounded-xl border border-gray-200 shadow-sm"
+                  />
+                </div>
+              )}
+              {/* Details and Buttons */}
+              <div className="flex-1 flex flex-col">
+                <div className="flex-1 overflow-y-auto px-6 py-4 space-y-2 text-sm">
+                  <p>
+                    <strong>Title:</strong> {selectedEvent.title}
+                  </p>
+                  <p>
+                    <strong>Date:</strong> {selectedEvent.date}
+                  </p>
+                  <p>
+                    <strong>Time:</strong> {selectedEvent.time}
+                  </p>
+                  <p>
+                    <strong>Location:</strong> {selectedEvent.location}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {selectedEvent.email}
+                  </p>
+                  <p>
+                    <strong>Category:</strong> {selectedEvent.category}
+                  </p>
+                  <p>
+                    <strong>Description:</strong> {selectedEvent.description}
+                  </p>
+                </div>
+                {/* Approve/Decline Buttons */}
+                {!selectedEvent.approved && (
+                  <div className="px-6 py-4 border-t border-gray-200 flex gap-3 bg-white sticky bottom-0 z-10">
+                    <Button
+                      color="gold"
+                      rounded
+                      onClick={() =>
+                        setConfirmAction({
+                          type: "approve",
+                          eventId: selectedEvent.id!,
+                        })
+                      }
+                    >
+                      Approve
+                    </Button>
+                    <Button
+                      color="red"
+                      outline
+                      rounded
+                      onClick={() =>
+                        setConfirmAction({
+                          type: "decline",
+                          eventId: selectedEvent.id!,
+                        })
+                      }
+                    >
+                      Decline
+                    </Button>
+                  </div>
+                )}
               </div>
-            )}
-            {/* Event Details Scrollable */}
-            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-2 text-sm">
-              <p>
-                <strong>Title:</strong> {selectedEvent.title}
-              </p>
-              <p>
-                <strong>Date:</strong> {selectedEvent.date}
-              </p>
-              <p>
-                <strong>Time:</strong> {selectedEvent.time}
-              </p>
-              <p>
-                <strong>Location:</strong> {selectedEvent.location}
-              </p>
-              <p>
-                <strong>Email:</strong> {selectedEvent.email}
-              </p>
-              <p>
-                <strong>Category:</strong> {selectedEvent.category}
-              </p>
-              <p>
-                <strong>Description:</strong> {selectedEvent.description}
-              </p>
             </div>
-            {/* Approve/Decline Buttons */}
-            {!selectedEvent.approved && (
-              <div className="px-6 py-4 border-t border-gray-200 flex gap-3 bg-white sticky bottom-0 z-10">
-                <Button
-                  color="gold"
-                  rounded
-                  onClick={() =>
-                    setConfirmAction({
-                      type: "approve",
-                      eventId: selectedEvent.id!,
-                    })
-                  }
-                >
-                  Approve
-                </Button>
-                <Button
-                  color="red"
-                  outline
-                  rounded
-                  onClick={() =>
-                    setConfirmAction({
-                      type: "decline",
-                      eventId: selectedEvent.id!,
-                    })
-                  }
-                >
-                  Decline
-                </Button>
-              </div>
-            )}
           </div>
         </div>
       )}
