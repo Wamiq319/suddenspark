@@ -11,6 +11,8 @@ import {
 } from "@/components";
 import type { Event } from "@/types";
 import { FaPlusCircle, FaCheckCircle, FaCalendarAlt } from "react-icons/fa";
+import { eventSchema } from "@/validation";
+import { z } from "zod";
 
 const CATEGORY_OPTIONS = [
   { value: "Community", label: "Community" },
@@ -46,6 +48,9 @@ export default function EventSubmitPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [customCategory, setCustomCategory] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -63,11 +68,39 @@ export default function EventSubmitPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+    setErrors({});
+    setSuccessMessage("");
+    setErrorMessage("");
 
+    // Validate image is present
+    if (!imageFile) {
+      setErrors({ image: "Event image is required" });
+      setSubmitting(false);
+      return;
+    }
+
+    // Prepare data for validation
     const categoryToSubmit =
       formData.category === "Other" && customCategory
         ? customCategory
         : formData.category;
+
+    const dataToValidate = {
+      ...formData,
+      category: categoryToSubmit,
+    };
+
+    // Validate with zod
+    const result = eventSchema.safeParse(dataToValidate);
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.issues.forEach((err: any) => {
+        if (err.path[0]) fieldErrors[err.path[0] as string] = err.message;
+      });
+      setErrors(fieldErrors);
+      setSubmitting(false);
+      return;
+    }
 
     const formattedDate = formData.date?.toISOString().split("T")[0] || "";
     const formattedTime =
@@ -93,8 +126,28 @@ export default function EventSubmitPage() {
       });
 
       const result = await res.json();
-      console.log("Event created:", result);
+      if (res.ok && result.success) {
+        setSuccessMessage(
+          "Your event has been submitted and will be published once approved by admin."
+        );
+        setFormData({
+          title: "",
+          description: "",
+          location: "",
+          email: "",
+          category: "Community",
+          date: null,
+          time: null,
+        });
+        setImageFile(null);
+        setCustomCategory("");
+      } else {
+        setErrorMessage(
+          result.message || "Internal error. Please try again later."
+        );
+      }
     } catch (err) {
+      setErrorMessage("Internal error. Please try again later.");
       console.error("Event submit error:", err);
     } finally {
       setSubmitting(false);
@@ -171,11 +224,21 @@ export default function EventSubmitPage() {
         onSubmit={handleSubmit}
         className="space-y-6 bg-base-100 p-6 rounded-box border border-base-300 shadow-sm"
       >
+        {successMessage && (
+          <div className="mb-4 p-3 rounded bg-green-100 text-green-800 border border-green-300">
+            {successMessage}
+          </div>
+        )}
+        {errorMessage && (
+          <div className="mb-4 p-3 rounded bg-red-100 text-red-800 border border-red-300">
+            {errorMessage}
+          </div>
+        )}
         {/* Row: Title + Email */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-full">
             <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
-              Event Title
+              Event Title <span className="text-red-500">*</span>
             </span>
             <InputField
               name="title"
@@ -186,10 +249,13 @@ export default function EventSubmitPage() {
               outline
               type="text"
             />
+            {errors.title && (
+              <div className="text-red-500 text-xs mt-1">{errors.title}</div>
+            )}
           </div>
           <div className="w-full">
             <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
-              Contact Email
+              Contact Email <span className="text-red-500">*</span>
             </span>
             <InputField
               name="email"
@@ -200,21 +266,27 @@ export default function EventSubmitPage() {
               outline
               type="email"
             />
+            {errors.email && (
+              <div className="text-red-500 text-xs mt-1">{errors.email}</div>
+            )}
           </div>
         </div>
 
         {/* Row: Image Upload */}
         <div>
           <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
-            Event Image
+            Event Image <span className="text-red-500">*</span>
           </span>
           <ImageUploadField onChange={setImageFile} />
+          {errors.image && (
+            <div className="text-red-500 text-xs mt-1">{errors.image}</div>
+          )}
         </div>
 
         {/* Row: Location */}
         <div>
           <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
-            Location
+            Location <span className="text-red-500">*</span>
           </span>
           <InputField
             name="location"
@@ -225,13 +297,16 @@ export default function EventSubmitPage() {
             outline
             type="text"
           />
+          {errors.location && (
+            <div className="text-red-500 text-xs mt-1">{errors.location}</div>
+          )}
         </div>
 
         {/* Row: Date + Time */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-full">
             <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
-              Event Date
+              Event Date <span className="text-red-500">*</span>
             </span>
             <DatePickerField
               value={formData.date}
@@ -241,10 +316,13 @@ export default function EventSubmitPage() {
               color="gold"
               placeholder="Choose the event date"
             />
+            {errors.date && (
+              <div className="text-red-500 text-xs mt-1">{errors.date}</div>
+            )}
           </div>
           <div className="w-full">
             <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
-              Event Time
+              Event Time <span className="text-red-500">*</span>
             </span>
             <TimePickerField
               value={formData.time}
@@ -254,13 +332,16 @@ export default function EventSubmitPage() {
               color="gold"
               placeholder="Choose the event start time"
             />
+            {errors.time && (
+              <div className="text-red-500 text-xs mt-1">{errors.time}</div>
+            )}
           </div>
         </div>
 
         {/* Row: Category + Optional Custom */}
         <div>
           <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
-            Category
+            Category <span className="text-red-500">*</span>
           </span>
           <DropdownField
             name="category"
@@ -270,12 +351,15 @@ export default function EventSubmitPage() {
             color="gold"
             outline
           />
+          {errors.category && (
+            <div className="text-red-500 text-xs mt-1">{errors.category}</div>
+          )}
         </div>
 
         {formData.category === "Other" && (
           <div>
             <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
-              Custom Category
+              Custom Category <span className="text-red-500">*</span>
             </span>
             <InputField
               name="customCategory"
@@ -285,13 +369,18 @@ export default function EventSubmitPage() {
               color="gold"
               outline
             />
+            {errors.customCategory && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.customCategory}
+              </div>
+            )}
           </div>
         )}
 
         {/* Row: Description */}
         <div>
           <span className="block mb-1 text-sm font-semibold text-[#ffd700]">
-            Event Description
+            Event Description <span className="text-red-500">*</span>
           </span>
           <InputField
             name="description"
@@ -304,6 +393,11 @@ export default function EventSubmitPage() {
             rows={6}
             textareaHeight="120px"
           />
+          {errors.description && (
+            <div className="text-red-500 text-xs mt-1">
+              {errors.description}
+            </div>
+          )}
         </div>
 
         {/* Submit Button */}

@@ -61,7 +61,7 @@ export function InputField(props: InputFieldProps) {
   };
 
   const baseInputClass =
-    "w-full max-w-md transition duration-200 font-medium text-neutral-content border border-neutral-content bg-transparent focus:outline-none focus:ring-2";
+    "w-full max-w-md transition duration-200 font-medium text-black border border-neutral-content bg-transparent focus:outline-none focus:ring-2 placeholder-gray-400 focus:text-black";
 
   const combinedClasses = [
     baseInputClass,
