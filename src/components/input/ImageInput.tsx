@@ -10,7 +10,6 @@ export function ImageUploadField({ onChange }: ImageUploadFieldProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState<string>("");
   const [previewUrl, setPreviewUrl] = useState<string>("");
-  const [fileSize, setFileSize] = useState<number | null>(null);
 
   const handleClick = () => {
     inputRef.current?.click();
@@ -19,7 +18,7 @@ export function ImageUploadField({ onChange }: ImageUploadFieldProps) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setFileName(file?.name || "");
-    setFileSize(file ? file.size : null);
+
     if (file) {
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);

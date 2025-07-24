@@ -12,7 +12,6 @@ import {
 import type { Event } from "@/types";
 import { FaPlusCircle, FaCheckCircle, FaCalendarAlt } from "react-icons/fa";
 import { eventSchema } from "@/validation";
-import { z } from "zod";
 
 const CATEGORY_OPTIONS = [
   { value: "Community", label: "Community" },
