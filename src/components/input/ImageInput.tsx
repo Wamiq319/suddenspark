@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 
 interface ImageUploadFieldProps {
   onChange: (file: File | null) => void;
@@ -28,12 +29,6 @@ export function ImageUploadField({ onChange }: ImageUploadFieldProps) {
     onChange(file);
   };
 
-  const formatSize = (size: number) => {
-    if (size < 1024) return `${size} bytes`;
-    if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
-    return `${(size / (1024 * 1024)).toFixed(2)} MB`;
-  };
-
   return (
     <div className="w-full max-w-md">
       <div
@@ -42,10 +37,13 @@ export function ImageUploadField({ onChange }: ImageUploadFieldProps) {
       >
         <div className="flex items-center justify-center w-32 h-20 bg-base-100 border border-dashed border-[#ffd700] rounded-md overflow-hidden md:mr-4 md:mb-0 mb-4">
           {previewUrl ? (
-            <img
+            <Image
               src={previewUrl}
               alt="Preview"
+              width={128}
+              height={80}
               className="w-full h-full object-cover"
+              unoptimized
             />
           ) : (
             <span className="text-base-content/40 text-xs">

@@ -8,7 +8,6 @@ export function TimePickerField({
   value,
   onChange,
   placeholder = "Select time",
-  color = "white",
 }: {
   value: Date | null;
   onChange: (date: Date | null) => void;

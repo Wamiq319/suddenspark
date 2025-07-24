@@ -93,7 +93,7 @@ export default function EventSubmitPage() {
     const result = eventSchema.safeParse(dataToValidate);
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
-      result.error.issues.forEach((err: any) => {
+      result.error.issues.forEach((err) => {
         if (err.path[0]) fieldErrors[err.path[0] as string] = err.message;
       });
       setErrors(fieldErrors);
@@ -312,7 +312,6 @@ export default function EventSubmitPage() {
               onChange={(value) =>
                 setFormData((prev) => ({ ...prev, date: value }))
               }
-              color="gold"
               placeholder="Choose the event date"
             />
             {errors.date && (

@@ -8,12 +8,10 @@ export function DatePickerField({
   value,
   onChange,
   placeholder = "Select a date",
-  color = "white",
 }: {
   value: Date | null;
   onChange: (date: Date | null) => void;
   placeholder?: string;
-  color?: "white" | "blue" | "gold";
 }) {
   return (
     <div className="w-full max-w-md relative">

@@ -32,7 +32,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
 };
 
 export function InputField(props: InputFieldProps) {
-  const { color = "white", outline = false, className = "", ...rest } = props;
+  const { color = "white", outline = false, className = "" } = props;
   const isTextarea = props.textarea;
 
   const focusRing = {
@@ -60,8 +60,9 @@ export function InputField(props: InputFieldProps) {
     ) : null;
   };
 
-  const baseInputClass =
-    "w-full max-w-md transition duration-200 font-medium text-black border border-neutral-content bg-transparent focus:outline-none focus:ring-2 placeholder-gray-400 focus:text-black";
+  const baseInputClass = `w-full max-w-md transition duration-200 font-medium text-black border border-neutral-content ${
+    outline ? "bg-transparent" : "bg-white"
+  } focus:outline-none focus:ring-2 placeholder-gray-400 focus:text-black`;
 
   const combinedClasses = [
     baseInputClass,
