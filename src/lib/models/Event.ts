@@ -17,7 +17,7 @@ const eventSchema: Schema<EventDocument> = new Schema(
     time: { type: String, required: true }, // e.g. "14:00"
     category: { type: String, required: true },
     image: { type: String, default: "" },
-    slug: { type: String, trim: true },
+    slug: { type: String, required: true, trim: true, unique: true },
     approved: { type: Boolean, default: false },
   },
   {

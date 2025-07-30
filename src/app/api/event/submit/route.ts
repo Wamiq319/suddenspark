@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 import { dbConnect, EventModel } from "@/lib/server";
 import { uploadToCloudinary } from "@/lib/utils/uploadToCloudinary";
+import slugify from "slugify";
+
+function generateSlug(base: string): string {
+  const clean = slugify(base, { lower: true, strict: true });
+  const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+  return `${clean}-${randomSuffix}`;
+}
 
 export async function POST(request: Request) {
   try {
@@ -30,6 +37,12 @@ export async function POST(request: Request) {
       data[field] = value;
     }
 
+    // Generate unique slug
+    let slug = generateSlug(data.title);
+    while (await EventModel.exists({ slug })) {
+      slug = generateSlug(data.title);
+    }
+
     let imageUrl = "";
     let imageId = "";
 
@@ -45,6 +58,7 @@ export async function POST(request: Request) {
 
     const createdEvent = await EventModel.create({
       ...data,
+      slug,
       image: imageUrl,
       imageId,
       approved: false,
