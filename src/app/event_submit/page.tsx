@@ -126,7 +126,7 @@ export default function EventSubmitPage() {
     if (imageFile) body.append("image", imageFile);
 
     try {
-      const res = await fetch("/api/event", {
+      const res = await fetch("/api/event/submit", {
         method: "POST",
         body,
       });

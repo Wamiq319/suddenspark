@@ -1,20 +1,36 @@
 "use client";
 
-import { useState } from "react";
-import events from "@/data/events.json";
+import { useEffect, useState } from "react";
 import eventIdeas from "@/data/event-ideas.json";
-import { EventCard } from "@/components";
-import { Button } from "@/components";
+import { EventCard, Button } from "@/components";
+import type { Event } from "@/types";
 
 export default function EventsPage() {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const EVENTS_PER_PAGE = 6;
-  const totalPages = Math.ceil(events.length / EVENTS_PER_PAGE);
 
-  const paginated = events.slice(
-    (page - 1) * EVENTS_PER_PAGE,
-    page * EVENTS_PER_PAGE
-  );
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch(
+          `/api/event/public?limit=${EVENTS_PER_PAGE}&page=${page}`
+        );
+        const data = await res.json();
+        if (data.success) {
+          setEvents(data.events);
+          setTotal(data.total);
+        }
+      } catch (err) {
+        console.error("Failed to fetch events:", err);
+      }
+    };
+
+    fetchEvents();
+  }, [page]);
+
+  const totalPages = Math.ceil(total / EVENTS_PER_PAGE);
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-16 bg-[#fdfaf3]">
@@ -26,8 +42,8 @@ export default function EventsPage() {
       {/* Event Cards Section */}
       <section>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {paginated.map((event) => (
-            <EventCard key={event.id} {...event} />
+          {events.map((event) => (
+            <EventCard key={event.id || event._id} {...event} />
           ))}
         </div>
 
