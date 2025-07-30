@@ -1,0 +1,92 @@
+[
+  {
+    "id": "1",
+    "title": "Neighborhood BBQ Bash",
+    "description": "Join us for food, fun, and fellowship at our annual neighborhood BBQ.",
+    "date": "2025-07-30",
+    "time": "4:00 PM",
+    "slug": "event-1",
+    "image": "https://placehold.co/600x400?text=Event+1",
+    "category": "Food & Drink"
+  },
+  {
+    "id": "2",
+    "title": "Sunday Worship in the Park",
+    "description": "Worship and praise under the open sky this Sunday morning!",
+    "date": "2025-07-31",
+    "time": "4:00 PM",
+    "slug": "event-2",
+    "image": "https://placehold.co/600x400?text=Event+2",
+    "category": "Faith-Based"
+  },
+  {
+    "id": "3",
+    "title": "Community Potluck",
+    "description": "Bring a dish and a friend — let’s celebrate with a feast!",
+    "date": "2025-08-01",
+    "time": "4:00 PM",
+    "slug": "event-3",
+    "image": "https://placehold.co/600x400?text=Event+3",
+    "category": "Community"
+  },
+  {
+    "id": "4",
+    "title": "Chalk Art Challenge",
+    "description": "Show off your sidewalk skills at our public chalk art competition.",
+    "date": "2025-08-02",
+    "time": "4:00 PM",
+    "slug": "event-4",
+    "image": "https://placehold.co/600x400?text=Event+4",
+    "category": "Creative"
+  },
+  {
+    "id": "5",
+    "title": "Smoothie Stand for Youth",
+    "description": "Youth-led smoothie stand fundraiser for our community trip.",
+    "date": "2025-08-03",
+    "time": "4:00 PM",
+    "slug": "event-5",
+    "image": "https://placehold.co/600x400?text=Event+5",
+    "category": "Youth"
+  },
+  {
+    "id": "6",
+    "title": "Open Mic Praise Night",
+    "description": "Share your voice, music, or story in this open mic night.",
+    "date": "2025-08-04",
+    "time": "4:00 PM",
+    "slug": "event-6",
+    "image": "https://placehold.co/600x400?text=Event+6",
+    "category": "Faith-Based"
+  },
+  {
+    "id": "7",
+    "title": "Book Swap & Coffee",
+    "description": "Bring books you love and trade them for something new.",
+    "date": "2025-08-05",
+    "time": "4:00 PM",
+    "slug": "event-7",
+    "image": "https://placehold.co/600x400?text=Event+7",
+    "category": "Educational"
+  },
+  {
+    "id": "8",
+    "title": "Bike Parade Downtown",
+    "description": "Ride together and celebrate community — bikes, balloons, and music.",
+    "date": "2025-08-06",
+    "time": "4:00 PM",
+    "slug": "event-8",
+    "image": "https://placehold.co/600x400?text=Event+8",
+    "category": "Outdoor"
+  },
+  {
+    "id": "9",
+    "title": "Family Field Day Extravaganza",
+    "description": "Fun games, snacks, and team events for the whole family!",
+    "date": "2025-08-07",
+    "time": "4:00 PM",
+    "slug": "event-9",
+    "image": "https://placehold.co/600x400?text=Event+9",
+    "category": "Family"
+  }
+]

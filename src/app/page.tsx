@@ -4,13 +4,15 @@ import {
   EventFlowSection,
   AboutSection,
   NewsletterSection,
+  EventIdeasScroller,
 } from "@/components";
 
 export default function Home() {
   return (
     <main>
       <Hero />
-      <RecentEventsSection />
+      <EventIdeasScroller />
+      {/* <RecentEventsSection /> */}
       <EventFlowSection />
       <AboutSection />
       <NewsletterSection />

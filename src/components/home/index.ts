@@ -3,6 +3,7 @@ import { RecentEventsSection } from "./RecentEventsSection";
 import { EventFlowSection } from "./EventFlowSection";
 import { AboutSection } from "./AboutSection";
 import { NewsletterSection } from "./NewsletterSection";
+import { EventIdeasScroller } from "./EventIdeasScroller";
 
 export {
   Hero,
@@ -10,4 +11,5 @@ export {
   EventFlowSection,
   AboutSection,
   NewsletterSection,
+  EventIdeasScroller,
 };
