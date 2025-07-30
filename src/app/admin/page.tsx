@@ -2,11 +2,9 @@
 
 import { useEffect, useState } from "react";
 import type { Event } from "@/types";
-import { Button } from "@/components";
-import { Loader } from "@/components/ui";
+import { Button, Loader, DatePickerField } from "@/components";
 import clsx from "clsx";
 import Image from "next/image";
-import { DatePickerField } from "@/components/input/DatePicker";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -18,12 +16,16 @@ export default function AdminEventPage() {
   const [total, setTotal] = useState(0);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+
   const [confirmAction, setConfirmAction] = useState<{
     type: "approve" | "decline" | "delete";
     eventId: string;
+    declineReason?: string;
   } | null>(null);
+
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(false);
+  const [declineReason, setDeclineReason] = useState("");
 
   const fetchEvents = async (date?: Date | null, page = 1) => {
     try {
@@ -58,10 +60,19 @@ export default function AdminEventPage() {
   const handleAction = async () => {
     if (!confirmAction?.eventId) return;
 
-    const { eventId, type } = confirmAction;
+    const { eventId, type, declineReason } = confirmAction;
     const method = type === "delete" ? "DELETE" : "PATCH";
-    const body =
-      type === "delete" ? { id: eventId } : { id: eventId, action: type };
+
+    let body;
+    if (type === "delete") {
+      body = { id: eventId };
+    } else {
+      body = {
+        id: eventId,
+        action: type,
+        ...(type === "decline" && { declineReason }),
+      };
+    }
 
     await fetch("/api/admin/events", {
       method,
@@ -71,6 +82,36 @@ export default function AdminEventPage() {
 
     setConfirmAction(null);
     setModalOpen(false);
+    setDeclineReason("");
+    fetchEvents();
+  };
+
+  const handleActionWithReason = async (action: typeof confirmAction) => {
+    if (!action?.eventId) return;
+
+    const { eventId, type, declineReason } = action;
+    const method = type === "delete" ? "DELETE" : "PATCH";
+
+    let body;
+    if (type === "delete") {
+      body = { id: eventId };
+    } else {
+      body = {
+        id: eventId,
+        action: type,
+        ...(type === "decline" && { declineReason }),
+      };
+    }
+
+    await fetch("/api/admin/events", {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    setConfirmAction(null);
+    setModalOpen(false);
+    setDeclineReason("");
     fetchEvents();
   };
 
@@ -92,6 +133,25 @@ export default function AdminEventPage() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     fetchEvents(selectedDate, page);
+  };
+
+  const getStatusColor = (status: string) => {
+    if (!status) return "text-gray-600";
+    switch (status) {
+      case "approved":
+        return "text-green-600";
+      case "declined":
+        return "text-red-600";
+      case "pending":
+        return "text-yellow-600";
+      default:
+        return "text-gray-600";
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    if (!status) return "Unknown";
+    return status.charAt(0).toUpperCase() + status.slice(1);
   };
 
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
@@ -154,7 +214,10 @@ export default function AdminEventPage() {
             {events.map((event, idx) => (
               <tr
                 key={event.id || `${event.title}-${idx}`}
-                className="hover:bg-base-50 transition"
+                className={clsx(
+                  "hover:bg-base-50 transition",
+                  event.status === "declined" && "bg-red-50"
+                )}
               >
                 <td className="px-4 py-2">
                   {event.image ? (
@@ -176,14 +239,21 @@ export default function AdminEventPage() {
                 <td className="px-4 py-2">{event.time}</td>
                 <td className="px-4 py-2">{event.location}</td>
                 <td className="px-4 py-2">
-                  <span
-                    className={clsx("font-semibold", {
-                      "text-yellow-600": !event.approved,
-                      "text-green-600": event.approved,
-                    })}
-                  >
-                    {event.approved ? "Approved" : "Pending"}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={clsx(
+                        "font-semibold",
+                        getStatusColor(event.status)
+                      )}
+                    >
+                      {getStatusText(event.status)}
+                    </span>
+                    {event.status === "declined" && event.declineReason && (
+                      <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">
+                        Has reason
+                      </span>
+                    )}
+                  </div>
                 </td>
                 <td className="px-4 py-2 flex gap-2">
                   <Button
@@ -282,11 +352,36 @@ export default function AdminEventPage() {
                     <strong>Category:</strong> {selectedEvent.category}
                   </p>
                   <p>
+                    <strong>Status:</strong>{" "}
+                    <span className={getStatusColor(selectedEvent.status)}>
+                      {getStatusText(selectedEvent.status)}
+                    </span>
+                  </p>
+                  {selectedEvent.status === "declined" &&
+                    selectedEvent.declineReason && (
+                      <div className="bg-red-50 border border-red-200 rounded-md p-3 mt-2">
+                        <p className="text-red-800 font-semibold mb-1">
+                          Decline Reason:
+                        </p>
+                        <p className="text-red-700">
+                          {selectedEvent.declineReason}
+                        </p>
+                      </div>
+                    )}
+                  {selectedEvent.status === "declined" &&
+                    !selectedEvent.declineReason && (
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3 mt-2">
+                        <p className="text-yellow-800 font-semibold">
+                          No decline reason provided
+                        </p>
+                      </div>
+                    )}
+                  <p>
                     <strong>Description:</strong> {selectedEvent.description}
                   </p>
                 </div>
                 {/* Approve/Decline Buttons */}
-                {!selectedEvent.approved && (
+                {selectedEvent.status === "pending" && (
                   <div className="px-6 py-4 border-t border-gray-200 flex gap-3 bg-white sticky bottom-0 z-10">
                     <Button
                       color="gold"
@@ -304,12 +399,13 @@ export default function AdminEventPage() {
                       color="red"
                       outline
                       rounded
-                      onClick={() =>
+                      onClick={() => {
+                        setDeclineReason("");
                         setConfirmAction({
                           type: "decline",
                           eventId: selectedEvent.id!,
-                        })
-                      }
+                        });
+                      }}
                     >
                       Decline
                     </Button>
@@ -330,15 +426,51 @@ export default function AdminEventPage() {
               {confirmAction.type.charAt(0).toUpperCase() +
                 confirmAction.type.slice(1)}
             </h3>
+
+            {confirmAction.type === "decline" && (
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Decline Reason (Optional)
+                </label>
+                <textarea
+                  value={declineReason}
+                  onChange={(e) => setDeclineReason(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  rows={3}
+                  placeholder="Enter reason for declining this event..."
+                />
+              </div>
+            )}
+
             <p className="text-sm text-gray-600 mb-6 text-center">
               Are you sure you want to {confirmAction.type} this event?
             </p>
             <div className="flex justify-center gap-4">
-              <Button onClick={handleAction} color="blue" rounded>
+              <Button
+                onClick={() => {
+                  if (confirmAction.type === "decline") {
+                    // Update the confirmAction with the decline reason and then handle the action
+                    const updatedAction = {
+                      ...confirmAction,
+                      declineReason: declineReason.trim() || undefined,
+                    };
+                    setConfirmAction(updatedAction);
+                    // Use the updated action directly
+                    handleActionWithReason(updatedAction);
+                  } else {
+                    handleAction();
+                  }
+                }}
+                color="blue"
+                rounded
+              >
                 Yes
               </Button>
               <Button
-                onClick={() => setConfirmAction(null)}
+                onClick={() => {
+                  setConfirmAction(null);
+                  setDeclineReason("");
+                }}
                 color="red"
                 outline
                 rounded

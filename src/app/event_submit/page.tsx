@@ -35,6 +35,8 @@ type EventFormData = Omit<
   | "time"
   | "image"
   | "approved"
+  | "status"
+  | "declineReason"
 > & {
   date: Date | null;
   time: Date | null;

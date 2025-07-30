@@ -61,7 +61,7 @@ export async function POST(request: Request) {
       slug,
       image: imageUrl,
       imageId,
-      approved: false,
+      status: "pending",
     });
 
     return NextResponse.json({ success: true, event: createdEvent });

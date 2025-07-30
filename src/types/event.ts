@@ -23,5 +23,6 @@ export interface Event {
   slug?: string;
   createdAt?: string;
   updatedAt?: string;
-  approved: boolean;
+  status: "pending" | "approved" | "declined";
+  declineReason?: string;
 }

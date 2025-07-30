@@ -29,22 +29,40 @@ export async function GET(request: Request) {
   }
 }
 
-// PATCH to approve an event
+// PATCH to approve or decline an event
 export async function PATCH(request: Request) {
   try {
     await dbConnect();
-    const { id } = await request.json();
+    const { id, action, declineReason } = await request.json();
     if (!id)
       return NextResponse.json(
         { success: false, message: "Missing event ID" },
         { status: 400 }
       );
 
-    const updated = await EventModel.findByIdAndUpdate(
-      id,
-      { approved: true },
-      { new: true }
-    );
+    if (!action || !["approve", "decline"].includes(action))
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid action. Must be 'approve' or 'decline'",
+        },
+        { status: 400 }
+      );
+
+    const updateData: {
+      status: string;
+      declineReason?: string;
+    } = {
+      status: action === "approve" ? "approved" : "declined",
+    };
+
+    if (action === "decline") {
+      updateData.declineReason = declineReason || "";
+    }
+
+    const updated = await EventModel.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
     if (!updated)
       return NextResponse.json(
         { success: false, message: "Event not found" },
@@ -55,7 +73,7 @@ export async function PATCH(request: Request) {
   } catch (error) {
     console.error("Admin PATCH error:", error);
     return NextResponse.json(
-      { success: false, message: "Failed to approve event" },
+      { success: false, message: "Failed to update event status" },
       { status: 500 }
     );
   }

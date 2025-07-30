@@ -21,11 +21,14 @@ export default function EventsPage() {
         );
         const data = await res.json();
         if (data.success) {
-          const formatted = data.events.map((event: any) => ({
-            ...event,
-            id: event._id,
-          }));
+          const formatted = data.events.map(
+            (event: { _id: string; [key: string]: unknown }) => ({
+              ...event,
+              id: event._id,
+            })
+          );
           setEvents(formatted);
+          setTotal(data.total || 0);
         }
       } catch (err) {
         console.error("Failed to fetch events:", err);
@@ -43,9 +46,9 @@ export default function EventsPage() {
         Discover Events & Get Inspired
       </h1>
 
-      <section className="flex flex-col lg:flex-row gap-10">
+      <section className="flex flex-col lg:flex-row gap-16">
         {/* Event Grid */}
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {events
             .filter(
               (event): event is Event & { id: string; slug: string } =>
@@ -95,8 +98,8 @@ export default function EventsPage() {
                 Why Join In?
               </h3>
               <p className="text-sm text-gray-700">
-                By attending events, you're helping strengthen neighborhoods and
-                build lasting connections.
+                By attending events, you&apos;re helping strengthen
+                neighborhoods and build lasting connections.
               </p>
             </div>
             <Link href={ROUTES.about}>

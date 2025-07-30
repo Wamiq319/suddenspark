@@ -4,7 +4,8 @@ import type { Event as EventType } from "@/types";
 
 // Define a Mongoose document type that extends the EventType
 export interface EventDocument extends Omit<EventType, "id">, Document {
-  approved: boolean;
+  status: "pending" | "approved" | "declined";
+  declineReason?: string;
 }
 
 const eventSchema: Schema<EventDocument> = new Schema(
@@ -18,7 +19,12 @@ const eventSchema: Schema<EventDocument> = new Schema(
     category: { type: String, required: true },
     image: { type: String, default: "" },
     slug: { type: String, required: true, trim: true, unique: true },
-    approved: { type: Boolean, default: false },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "declined"],
+      default: "pending",
+    },
+    declineReason: { type: String, trim: true },
   },
   {
     timestamps: true,

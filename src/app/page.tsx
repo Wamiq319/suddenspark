@@ -1,6 +1,5 @@
 import {
   Hero,
-  RecentEventsSection,
   EventFlowSection,
   AboutSection,
   NewsletterSection,
@@ -12,7 +11,6 @@ export default function Home() {
     <main>
       <Hero />
       <EventIdeasScroller />
-      {/* <RecentEventsSection /> */}
       <EventFlowSection />
       <AboutSection />
       <NewsletterSection />
