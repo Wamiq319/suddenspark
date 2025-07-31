@@ -2,7 +2,6 @@ import {
   Hero,
   EventFlowSection,
   AboutSection,
-  NewsletterSection,
   EventIdeasScroller,
 } from "@/components";
 
@@ -13,7 +12,6 @@ export default function Home() {
       <EventIdeasScroller />
       <EventFlowSection />
       <AboutSection />
-      <NewsletterSection />
     </main>
   );
 }
