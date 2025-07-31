@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { dbConnect, EventModel } from "@/lib/server";
 import { getSessionFromRequest } from "@/lib/auth";
 
 // GET all events (pending + approved)
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   // Check authentication
-  const session = await getSessionFromRequest(request as any);
+  const session = await getSessionFromRequest(request);
   if (!session) {
     return NextResponse.json(
       { success: false, message: "Unauthorized" },
@@ -39,9 +39,9 @@ export async function GET(request: Request) {
 }
 
 // PATCH to approve or decline an event
-export async function PATCH(request: Request) {
+export async function PATCH(request: NextRequest) {
   // Check authentication
-  const session = await getSessionFromRequest(request as any);
+  const session = await getSessionFromRequest(request);
   if (!session) {
     return NextResponse.json(
       { success: false, message: "Unauthorized" },
@@ -97,9 +97,9 @@ export async function PATCH(request: Request) {
 }
 
 // DELETE event
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   // Check authentication
-  const session = await getSessionFromRequest(request as any);
+  const session = await getSessionFromRequest(request);
   if (!session) {
     return NextResponse.json(
       { success: false, message: "Unauthorized" },

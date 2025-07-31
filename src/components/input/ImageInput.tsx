@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 
 interface ImageUploadFieldProps {
@@ -17,21 +17,21 @@ export function ImageUploadField({
   const [previewUrl, setPreviewUrl] = useState<string>("");
 
   // Reset function to clear the image preview
-  const resetImage = () => {
+  const resetImage = useCallback(() => {
     setFileName("");
     setPreviewUrl("");
     if (inputRef.current) {
       inputRef.current.value = "";
     }
     onChange(null);
-  };
+  }, [onChange]);
 
   // Effect to reset when resetKey changes
   useEffect(() => {
     if (resetKey !== undefined) {
       resetImage();
     }
-  }, [resetKey]);
+  }, [resetKey, resetImage]);
 
   const handleClick = () => {
     inputRef.current?.click();
