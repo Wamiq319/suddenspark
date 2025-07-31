@@ -1,8 +1,17 @@
 import { NextResponse } from "next/server";
 import { dbConnect, EventModel } from "@/lib/server";
+import { getSessionFromRequest } from "@/lib/auth";
 
 // GET all events (pending + approved)
 export async function GET(request: Request) {
+  // Check authentication
+  const session = await getSessionFromRequest(request as any);
+  if (!session) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
   try {
     await dbConnect();
     // Parse date, limit, and page from query string
@@ -31,6 +40,14 @@ export async function GET(request: Request) {
 
 // PATCH to approve or decline an event
 export async function PATCH(request: Request) {
+  // Check authentication
+  const session = await getSessionFromRequest(request as any);
+  if (!session) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
   try {
     await dbConnect();
     const { id, action, declineReason } = await request.json();
@@ -81,6 +98,14 @@ export async function PATCH(request: Request) {
 
 // DELETE event
 export async function DELETE(request: Request) {
+  // Check authentication
+  const session = await getSessionFromRequest(request as any);
+  if (!session) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
   try {
     await dbConnect();
     const { id } = await request.json();

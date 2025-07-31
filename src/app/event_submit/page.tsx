@@ -66,6 +66,7 @@ export default function EventSubmitPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [imageResetKey, setImageResetKey] = useState(0);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -156,6 +157,7 @@ export default function EventSubmitPage() {
         });
         setImageFile(null);
         setCustomCategory("");
+        setImageResetKey((prev) => prev + 1); // Reset image preview
       } else {
         setErrorMessage(
           result.message || "Internal error. Please try again later."
@@ -357,7 +359,10 @@ export default function EventSubmitPage() {
                 <label className="block text-sm font-semibold text-gray-700 mb-2 group-hover:text-amber-600 transition-colors">
                   Event Image <span className="text-red-500">*</span>
                 </label>
-                <ImageUploadField onChange={setImageFile} />
+                <ImageUploadField
+                  onChange={setImageFile}
+                  resetKey={imageResetKey}
+                />
                 {errors.image && (
                   <div className="text-red-500 text-xs mt-1">
                     {errors.image}

@@ -156,9 +156,25 @@ export default function AdminEventPage() {
 
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
 
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", {
+        method: "POST",
+      });
+      window.location.href = "/admin/login";
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
   return (
     <section className="max-w-6xl mx-auto px-6 py-16">
-      <h1 className="text-3xl font-bold mb-8">Admin Events</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Admin Events</h1>
+        <Button color="red" outline rounded onClick={handleLogout}>
+          Logout
+        </Button>
+      </div>
       {/* Date Filter */}
       <div className="mb-6 flex items-center gap-4">
         <DatePickerField
